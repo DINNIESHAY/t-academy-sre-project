@@ -1,19 +1,19 @@
 # Stage 1: Build
-FROM eclipse-temurin:25-jdk-alpine AS build
+FROM eclipse-temurin:25.0.4.1_1-jdk-alpine AS build
 WORKDIR /app
 
 # Copy maven files and download dependencies
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
-RUN ./mvnw dependency:go-offline
+RUN chmod +x mvnw && ./mvnw -B dependency:go-offline
 
 # Copy source code and build
 COPY src ./src
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw -B clean package -DskipTests
 
 # Stage 2: Runtime
-FROM eclipse-temurin:25-jre-alpine
+FROM eclipse-temurin:25.0.4.1_1-jre-alpine
 WORKDIR /app
 
 # Copy the built jar from build stage

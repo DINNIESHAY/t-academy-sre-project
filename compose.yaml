@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:16
+    image: postgres:16.15
     container_name: travel_fellows_db
     restart: always
     environment:
@@ -18,7 +18,7 @@ services:
       retries: 5
 
   liquibase:
-    image: liquibase/liquibase:4.33
+    image: liquibase/liquibase:4.33.0
     depends_on:
       postgres:
         condition: service_healthy
@@ -34,7 +34,7 @@ services:
       - ./src/main/resources/migrations:/liquibase/changelog:ro
 
   redis:
-    image: redis:7-alpine
+    image: redis:7.4.11-alpine
     container_name: travel_fellows_redis
     restart: always
     ports:
