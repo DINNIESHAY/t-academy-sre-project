@@ -19,4 +19,7 @@ public class ResendApiProperties {
     @NotEmpty
     @URL
     private String apiUrl;
+
+    @NotEmpty
+    private String from;
 }

@@ -24,12 +24,12 @@ public class EmailService {
     public void sendVerificationCode(String targetEmail, String code) {
         String jsonBody = String.format("""
             {
-                "from": "TravelFellows <onboarding@resend.dev>",
+                "from": "%s",
                 "to": ["%s"],
                 "subject": "Код подтверждения регистрации",
                 "html": "<strong>Добро пожаловать! Ваш код: %s</strong>"
             }
-            """, targetEmail, code);
+            """, apiProperties.getFrom(), targetEmail, code);
 
         try {
             HttpRequest request = HttpRequest.newBuilder()

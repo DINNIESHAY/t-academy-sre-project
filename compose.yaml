@@ -1,7 +1,8 @@
+name: travel-fellows
+
 services:
   postgres:
     image: postgres:16.15
-    container_name: travel_fellows_db
     restart: always
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
@@ -35,10 +36,9 @@ services:
 
   redis:
     image: redis:7.4.11-alpine
-    container_name: travel_fellows_redis
     restart: always
     ports:
-      - "6379:6379"
+      - "${EXTERNAL_REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -50,10 +50,9 @@ services:
 
   app:
     build: .
-    container_name: travel_fellows_app
     restart: always
     ports:
-      - "8080:8080"
+      - "${APP_PORT:-8080}:8080"
     depends_on:
       postgres:
         condition: service_healthy
@@ -61,15 +60,14 @@ services:
         condition: service_completed_successfully
       redis:
         condition: service_healthy
+    env_file: .env
     environment:
+      - SERVER_PORT=8080
+      - UPLOAD_PATH=/app/uploads/
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - RESEND_API_KEY=${RESEND_API_KEY}
-      - SPRING_DATA_REDIS_HOST=redis
-      - SPRING_DATA_REDIS_PORT=6379
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     volumes:
       - uploads_data:/app/uploads
 
