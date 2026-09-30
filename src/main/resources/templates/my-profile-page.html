@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой профиль | TravelFellows</title>
+    <link th:href="@{/css/my-profile-page.css}" rel="stylesheet">
+    <base th:href="@{/}">
+</head>
+<body>
+
+<nav class="top-nav">
+    <div class="nav-container">
+        <a th:href="@{/feed}" class="back-nav-btn">← Назад к ленте</a>
+        <div class="nav-actions-group">
+            <button id="toggleFavoritesBtn" class="save-btn">Избранное</button>
+            <button id="toggleApplicationsBtn" class="save-btn">📩 Заявки мне</button>
+            <button id="toggleJoinedBtn" class="save-btn">Одобренные заявки</button>
+        </div>
+    </div>
+</nav>
+
+<div class="profile-layout">
+    <main class="profile-card" id="profileContainer"></main>
+
+    <section class="my-trips-section" id="myTripsSection">
+        <h2>Мои поездки</h2>
+        <div class="trips-container" id="myTripsContainer"></div>
+    </section>
+
+    <section class="my-trips-section" id="favoriteTripsSection" style="display: none;">
+        <h2>Избранные поездки</h2>
+        <div class="trips-container" id="favoriteTripsContainer"></div>
+    </section>
+
+    <section class="my-trips-section" id="myApplicationsSection" style="display: none;">
+        <h2>Заявки на мои поездки</h2>
+        <div class="applications-container" id="myApplicationsContainer"></div>
+    </section>
+
+    <section class="my-trips-section" id="joinedTripsSection" style="display: none;">
+        <h2>Поездки, в которых я участвую</h2>
+        <div class="trips-container" id="joinedTripsContainer"></div>
+    </section>
+</div>
+
+<template id="applicationCardTemplate">
+    <div class="trip-card application-card">
+        <div>
+            <div class="app-card-header">
+                <span class="app-trip-destination"></span>
+            </div>
+            <span class="app-applicant"></span>
+            <div class="app-info-block">
+                <h4 class="app-field-title">Сообщение:</h4>
+                <p class="app-message"></p>
+            </div>
+            <div class="app-info-block last">
+                <h4 class="app-field-title">Контакты:</h4>
+                <p class="app-contacts"></p>
+            </div>
+        </div>
+        <div class="app-card-actions">
+            <button class="accept-app-btn">✓ Принять</button>
+            <button class="view-trip-btn">Открыть поездку</button>
+        </div>
+    </div>
+</template>
+
+<template id="joinedTripCardTemplate">
+    <div class="trip-card joined-trip-card">
+        <div class="trip-info-block">
+            <div class="trip-header">
+                <div class="route-info">
+                    <span class="departure"></span> <span class="route-arrow">→</span> <span class="destination"></span>
+                </div>
+            </div>
+        </div>
+        <button class="view-trip-btn">Открыть поездку</button>
+    </div>
+</template>
+
+<div id="editTripModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-modal-btn" id="closeModalBtn">&times;</span>
+        <h3>Редактирование поездки</h3>
+        <form id="editTripForm">
+            <input type="hidden" id="editTripId">
+            <div class="form-group">
+                <label for="editBudget">Бюджет (₽)</label>
+                <input type="number" id="editBudget" name="budget" required>
+            </div>
+            <div class="form-group">
+                <label for="editMaxFellows">Максимум попутчиков</label>
+                <input type="number" id="editMaxFellows" name="maxFellows" required>
+            </div>
+            <div class="form-group">
+                <label for="editDescription">Описание путешествия</label>
+                <textarea id="editDescription" name="description" rows="4"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="submit" class="save-trip-btn">Сохранить изменения</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{fragments/profile :: profile-view}"></div>
+<div th:replace="~{fragments/my-trip-card :: my-trip-card}"></div>
+<div th:replace="~{fragments/trip-card :: trip-card}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script th:src="@{/js/shared/api.js}"></script>
+<script th:src="@{/js/shared/ui.js}"></script>
+<script th:src="@{/js/fragments/create-profile-view.js}"></script>
+<script th:src="@{/js/fragments/create-my-trip-card.js}"></script>
+<script th:src="@{/js/fragments/create-trip-card.js}"></script>
+<script th:src="@{/js/pages/my-profile-page.js}"></script>
+
+</body>
+</html>

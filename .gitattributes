@@ -1,0 +1,17 @@
+# Normalize line endings: LF in the repository on every machine
+* text=auto
+
+# Shell scripts must stay LF (they run inside Linux containers)
+/mvnw text eol=lf
+*.sh text eol=lf
+Dockerfile text eol=lf
+
+# Windows scripts stay CRLF
+*.cmd text eol=crlf
+
+# Binary files
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.webp binary
+*.jar binary

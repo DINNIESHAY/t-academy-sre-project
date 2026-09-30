@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<template id="profileCardTemplate" th:fragment="profile-view">
+    <div class="profile-container-inner">
+        <div class="profile-header">
+            <div class="avatar-wrapper"></div>
+            <div class="profile-titles">
+                <h1>Ваш профиль</h1>
+            </div>
+        </div>
+
+        <form id="profileForm" class="profile-info-grid">
+            <div class="info-item">
+                <label class="info-label">Имя пользователя</label>
+                <input type="text" class="info-input username-field" disabled>
+            </div>
+            <div class="info-item">
+                <label class="info-label">Email</label>
+                <input type="text" class="info-input email-field" disabled>
+            </div>
+
+            <div class="info-item">
+                <label class="info-label">Имя</label>
+                <input type="text" name="firstName" class="info-input first-name-field">
+            </div>
+            <div class="info-item">
+                <label class="info-label">Фамилия</label>
+                <input type="text" name="lastName" class="info-input last-name-field">
+            </div>
+            <div class="info-item">
+                <label class="info-label">Дата рождения</label>
+                <input type="date" name="birthDate" class="info-input birth-date-field">
+            </div>
+            <div class="info-item">
+                <label class="info-label">Контакты</label>
+                <input type="text" name="contact" class="info-input contact-field">
+            </div>
+            <div class="info-item">
+                <label class="info-label">Страна</label>
+                <input type="text" name="country" class="info-input country-field">
+            </div>
+            <div class="info-item">
+                <label class="info-label">Город</label>
+                <input type="text" name="city" class="info-input city-field">
+            </div>
+
+            <div class="info-item full-width">
+                <label class="info-label">О себе</label>
+                <textarea name="bio" class="info-input bio-field" rows="3"></textarea>
+            </div>
+
+            <div class="form-actions full-width">
+                <button type="submit" class="save-btn">Сохранить изменения</button>
+                <div id="saveStatus" class="status-message"></div>
+            </div>
+        </form>
+    </div>
+</template>
+
+</body>
+</html>

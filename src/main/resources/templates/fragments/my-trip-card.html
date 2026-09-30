@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<template id="myTripCardTemplate" th:fragment="my-trip-card">
+    <article class="trip-card">
+        <div class="trip-info-block">
+            <div class="trip-header">
+                <div class="route-info">
+                    <span class="departure"></span> <span class="route-arrow">→</span> <span class="destination"></span>
+                </div>
+                <div class="budget-badge"></div>
+            </div>
+
+            <div class="trip-details">
+                <div class="detail-item date-range"><span></span></div>
+                <div class="slots-info">Количество мест: <span></span></div>
+                <div class="tags-list"></div>
+                <div class="likes-info">Отметок нравится: <span></span></div>
+            </div>
+        </div>
+    </article>
+</template>
+
+</body>
+</html>

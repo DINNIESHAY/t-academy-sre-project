@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Произошла ошибка</title>
+
+    <link rel="stylesheet" th:href="@{/css/error-page.css}">
+</head>
+<body>
+
+<div class="error-card">
+    <div class="error-code" th:text="'Ошибка ' + ${status}">Ошибка 404</div>
+
+    <div class="error-message" th:text="${message}">К сожалению, запрашиваемая страница не существует или перенесена.</div>
+
+    <hr class="divider">
+
+    <a class="back-btn" th:href="@{/feed}">Вернуться на главную</a>
+</div>
+
+</body>
+</html>

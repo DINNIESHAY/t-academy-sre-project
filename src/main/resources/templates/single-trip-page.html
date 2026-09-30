@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали поездки | TravelFellows</title>
+    <link th:href="@{/css/single-trip-page.css}" rel="stylesheet">
+    <base th:href="@{/}">
+</head>
+<body>
+
+<header class="details-header">
+    <a th:href="@{/feed}" class="back-nav-btn">← Назад к ленте</a>
+</header>
+
+<div class="details-layout">
+    <main class="trip-main-card" id="tripCardContainer"></main>
+</div>
+
+<script th:src="@{/js/shared/api.js}"></script>
+<script th:src="@{/js/shared/ui.js}"></script>
+<script th:src="@{/js/pages/single-trip-page.js}"></script>
+
+</body>
+</html>

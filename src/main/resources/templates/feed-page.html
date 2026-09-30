@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лента поездок | TravelFellows</title>
+    <link th:href="@{/css/feed-page.css}" rel="stylesheet">
+    <base th:href="@{/}">
+</head>
+<body>
+
+<nav class="top-nav">
+    <div class="nav-container">
+        <a th:href="@{/profile/my}" class="profile-nav-btn">Мой профиль</a>
+        <a th:href="@{/auth/logout}"  class="profile-nav-btn">Выйти</a>
+    </div>
+</nav>
+
+<div class="feed-layout">
+    <section class="create-trip-banner">
+        <div class="banner-content">
+            <h2>Хотите организовать свою поездку? 🌍</h2>
+            <p>Создайте собственное путешествие, соберите компанию единомышленников и отправляйтесь в путь вместе!</p>
+        </div>
+        <a th:href="@{/create-trip}" class="create-trip-btn">Создать!</a>
+    </section>
+
+    <main class="trips-container" id="tripsContainer"></main>
+</div>
+
+<div id="applicationModal" class="modal">
+    <div class="modal-content">
+        <button class="close-modal-btn" aria-label="Закрыть">&times;</button>
+        <h3>Подать заявку на поездку</h3>
+
+        <form id="applicationForm">
+            <input type="hidden" id="modalTripId">
+
+            <div class="form-group">
+                <label for="modalContacts">Ваши контакты *</label>
+                <input type="text" id="modalContacts" required placeholder="Телефон, Telegram и др.">
+            </div>
+
+            <div class="form-group">
+                <label for="modalMessage">Сообщение автору (необязательно)</label>
+                <textarea id="modalMessage" rows="4" placeholder="Расскажите немного о себе..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width:100%;margin-top:8px;">Отправить заявку</button>
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{fragments/trip-card :: trip-card}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script th:src="@{/js/shared/api.js}"></script>
+<script th:src="@{/js/shared/ui.js}"></script>
+<script th:src="@{/js/fragments/create-trip-card.js}"></script>
+<script th:src="@{/js/pages/feed-page.js}"></script>
+
+</body>
+</html>

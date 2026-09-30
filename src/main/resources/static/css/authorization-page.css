@@ -1,0 +1,166 @@
+@import url('base.css');
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.container {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 1050px;
+    min-height: 600px;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 40px rgba(224, 94, 43, 0.1);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.left-panel,
+.right-panel-register {
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.right-panel {
+    background: url('../images/mountain.jpg') center/cover no-repeat;
+    position: relative;
+}
+
+.left-panel-register {
+    background: url('../images/forest.jpg') center/cover no-repeat;
+    position: relative;
+}
+
+.right-panel::after,
+.left-panel-register::after {
+    content: "TravelFellows";
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    line-height: 1.3;
+    color: var(--text);
+}
+
+p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-column,
+.input-row {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: var(--radius-sm);
+    border: 2px solid #e8e2da;
+    background: rgba(255, 255, 255, 0.7);
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--text);
+    transition: var(--transition);
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(255, 122, 69, 0.15);
+}
+
+.sign-in-btn,
+.sign-up-btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-primary);
+    margin-top: 10px;
+}
+
+.sign-in-btn:hover,
+.sign-up-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 122, 69, 0.3);
+}
+
+.sign-in-btn:disabled,
+.sign-up-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.error-message {
+    background: rgba(255, 77, 79, 0.08);
+    border-left: 4px solid var(--error);
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    color: #d32f2f;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.auth-link {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.auth-link a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 4px;
+    transition: var(--transition);
+}
+
+.auth-link a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать поездку | TravelFellows</title>
+    <link th:href="@{/css/feed-page.css}" rel="stylesheet">
+    <link th:href="@{/css/create-trip-page.css}" rel="stylesheet">
+    <base th:href="@{/}">
+</head>
+<body>
+
+<header class="details-header">
+    <a th:href="@{/feed}" class="back-nav-btn">← Назад к ленте</a>
+</header>
+
+<div class="create-layout">
+    <main class="create-card">
+        <h2>✨ Создание нового путешествия</h2>
+        <p class="subtitle">Заполните данные, чтобы найти идеальных попутчиков</p>
+
+        <form id="createTripForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="departurePoint">Точка отправления</label>
+                    <input type="text" id="departurePoint" name="departurePoint">
+                </div>
+
+                <div class="form-group">
+                    <label for="destination">Пункт назначения</label>
+                    <input type="text" id="destination" name="destination">
+                </div>
+
+                <div class="form-group">
+                    <label for="startAt">Дата начала</label>
+                    <input type="date" id="startAt" name="startAt">
+                </div>
+
+                <div class="form-group">
+                    <label for="endAt">Дата окончания</label>
+                    <input type="date" id="endAt" name="endAt">
+                </div>
+
+                <div class="form-group">
+                    <label for="budget">Бюджет (₽)</label>
+                    <input type="number" id="budget" name="budget">
+                </div>
+
+                <div class="form-group">
+                    <label for="maxFellows">Количество попутчиков</label>
+                    <input type="number" id="maxFellows" name="maxFellows">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="description">Описание путешествия</label>
+                    <textarea id="description" name="description" rows="4"
+                              placeholder="Расскажите о планах, маршруте и кого вы ищете..."></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Выберите теги</label>
+                    <div class="tags-selector" id="tagsSelector">
+                        <div class="tag-chip" data-tag="горы">горы</div>
+                        <div class="tag-chip" data-tag="море">море</div>
+                        <div class="tag-chip" data-tag="авто">авто</div>
+                        <div class="tag-chip" data-tag="пеший_туризм">пеший туризм</div>
+                        <div class="tag-chip" data-tag="активный_отдых">активный отдых</div>
+                        <div class="tag-chip" data-tag="культурный_отдых">культурный отдых</div>
+                        <div class="tag-chip" data-tag="бюджетно">бюджетно</div>
+                        <div class="tag-chip" data-tag="гастротур">гастротур</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="submit-btn" id="submitBtn">Опубликовать поездку</button>
+                <div id="errorMessage" class="error-msg"></div>
+            </div>
+        </form>
+    </main>
+</div>
+
+<script th:src="@{/js/shared/api.js}"></script>
+<script th:src="@{/js/shared/ui.js}"></script>
+<script th:src="@{/js/pages/create-trip-page.js}"></script>
+
+</body>
+</html>

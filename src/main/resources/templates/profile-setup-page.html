@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройка профиля | TravelFellows</title>
+    <link th:href="@{/css/profile-setup-page.css}" rel="stylesheet">
+</head>
+<body>
+
+<div class="setup-container">
+    <header class="setup-header">
+        <h2>Почта подтверждена!</h2>
+        <p>Давайте заполним Ваш профиль, чтобы попутчики могли узнать вас получше</p>
+    </header>
+
+    <form th:action="@{/profile/setup}" method="post" th:object="${profileForm}" enctype="multipart/form-data">
+
+        <div class="form-grid">
+
+            <div class="input-group">
+                <label>Имя</label>
+                <input type="text" th:field="*{firstName}" placeholder="Иван">
+                <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="field-error"></span>
+            </div>
+
+            <div class="input-group">
+                <label>Фамилия</label>
+                <input type="text" th:field="*{lastName}" placeholder="Иванов">
+                <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="field-error"></span>
+            </div>
+
+            <div class="input-group">
+                <label>Дата рождения</label>
+                <input type="date" th:field="*{birthDate}">
+                <span th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}" class="field-error"></span>
+            </div>
+
+            <div class="input-group">
+                <label>Способ связи (Telegram, Номер, VK)</label>
+                <input type="text" th:field="*{contact}" placeholder="@username или +7...">
+                <span th:if="${#fields.hasErrors('contact')}" th:errors="*{contact}" class="field-error"></span>
+            </div>
+
+            <div class="input-group">
+                <label>Страна</label>
+                <input type="text" th:field="*{country}">
+                <span th:if="${#fields.hasErrors('country')}" th:errors="*{country}" class="field-error"></span>
+            </div>
+
+            <div class="input-group">
+                <label>Город</label>
+                <input type="text" th:field="*{city}">
+                <span th:if="${#fields.hasErrors('city')}" th:errors="*{city}" class="field-error"></span>
+            </div>
+
+            <div class="input-group full-width">
+                <label>Фото профиля</label>
+                <div class="file-upload-wrapper">
+                    <input type="file" name="avatarFile" id="avatarFile" accept="image/*" onchange="updateFileName(this)">
+                    <div class="file-upload-btn" id="uploadBtnText">
+                        <span>📁</span> Выберите изображение на устройстве...
+                    </div>
+                </div>
+                <span th:if="${#fields.hasErrors('avatarUrl')}" th:errors="*{avatarUrl}" class="field-error"></span>
+                <span th:if="${error}" th:text="${avatarError}" class="field-error"> </span>
+            </div>
+
+            <div class="input-group full-width">
+                <label>О себе (маршруты, увлечения, музыка в дорогу)</label>
+                <textarea th:field="*{bio}" placeholder="Расскажите о ваших идеальных путешествиях..." rows="4"></textarea>
+                <span th:if="${#fields.hasErrors('bio')}" th:errors="*{bio}" class="field-error"></span>
+            </div>
+
+        </div>
+
+        <button type="submit" class="submit-btn">Сохранить</button>
+    </form>
+</div>
+
+<script>
+    function updateFileName(input) {
+        const btnText = document.getElementById('uploadBtnText');
+        if (input.files && input.files.length > 0) {
+            btnText.innerHTML = '✨ Выбран файл: <strong>' + input.files[0].name + '</strong>';
+            btnText.style.borderColor = 'var(--primary-color)';
+            btnText.style.color = 'var(--primary-color)';
+        } else {
+            btnText.innerHTML = '📁 Выберите изображение на устройстве...';
+            btnText.style.borderColor = 'var(--border-color)';
+            btnText.style.color = 'var(--text-muted)';
+        }
+    }
+</script>
+</body>
+</html>

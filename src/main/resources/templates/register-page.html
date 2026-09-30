@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация | TravelFellows</title>
+    <link th:href="@{/css/authorization-page.css}" rel="stylesheet">
+</head>
+<body>
+<main class="container">
+
+    <div class="left-panel-register"></div>
+
+    <section class="right-panel-register">
+        <h2>Добро пожаловать в мир путешествий :)</h2>
+
+        <form th:action="@{/auth/register}" method="post" th:object="${registrationForm}" onsubmit="disableSubmitButton(this)">
+
+            <div th:if="${usernameAlreadyExists}" class="error-message">
+                <span>Пользователь с таким именем уже существует</span>
+            </div>
+
+            <div th:if="${emailAlreadyExists}" class="error-message">
+                <span>Пользователь с таким email уже существует</span>
+            </div>
+
+            <div th:if="${#fields.hasErrors('username')}" class="error-message">
+                <span th:errors="*{username}">Ошибка username</span>
+            </div>
+
+            <div th:if="${#fields.hasErrors('email')}" class="error-message">
+                <span th:errors="*{email}">Ошибка email</span>
+            </div>
+
+            <div th:if="${#fields.hasErrors('password')}" class="error-message">
+                <span th:errors="*{password}">Ошибка пароля</span>
+            </div>
+
+            <div th:if="${#fields.hasErrors('confirmPassword')}" class="error-message">
+                <span th:errors="*{confirmPassword}">Пароли не совпадают</span>
+            </div>
+
+            <div class="input-row">
+                <input type="text" th:field="*{username}" placeholder="Имя пользователя">
+            </div>
+
+            <div class="input-row">
+                <input type="email" th:field="*{email}" placeholder="Email">
+            </div>
+
+            <div class="input-row">
+                <input type="password" th:field="*{password}" placeholder="Придумайте пароль">
+                <input type="password" th:field="*{confirmPassword}" placeholder="Повторите пароль">
+            </div>
+
+            <button type="submit" id="submit-btn" class="sign-up-btn">Зарегистрироваться</button>
+
+            <div class="auth-link">
+                Уже путешествуете с нами?
+                <a th:href="@{/auth/login}">Вернуться в путь!</a>
+            </div>
+        </form>
+    </section>
+
+</main>
+
+<script>
+    function disableSubmitButton(form) {
+        const btn = form.querySelector('#submit-btn');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerText = 'Отправляем код подтверждения...';
+        }
+    }
+</script>
+</body>
+</html>

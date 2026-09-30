@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение почты | TravelFellows</title>
+    <link th:href="@{/css/authorization-page.css}" rel="stylesheet">
+</head>
+<body>
+<main class="container" style="max-width: 600px; grid-template-columns: 1fr;">
+
+    <section class="right-panel-register">
+        <h2>Подтверждение Email</h2>
+        <p>Мы отправили код подтверждения на вашу почту. Пожалуйста, введите его ниже.</p>
+
+        <form th:action="@{/auth/verify-code}" method="post" onsubmit="disableSubmitButton(this)">
+
+            <div th:if="${wrongCode}" class="error-message">
+                <span>Неверный код подтверждения. Попробуйте еще раз.</span>
+            </div>
+
+            <div class="input-row">
+                <input type="text" name="code" placeholder="Введите 6-значный код" required style="text-align: center; letter-spacing: 2px; font-size: 1.2rem;">
+            </div>
+
+            <button type="submit" class="sign-up-btn">Подтвердить и зарегистрироваться</button>
+        </form>
+    </section>
+
+</main>
+
+<script>
+    function disableSubmitButton(form) {
+        const btn = form.querySelector('#submit-btn');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerText = 'Проверка...';
+        }
+    }
+</script>
+</body>
+</html>

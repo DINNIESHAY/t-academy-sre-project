@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход | TravelFellows</title>
+    <link th:href="@{/css/authorization-page.css}" rel="stylesheet">
+</head>
+<body>
+<main class="container">
+    <section class="left-panel">
+        <h2>С возвращением!</h2>
+
+        <form th:action="@{/auth/login}" method="post" onsubmit="disableSubmitButton(this)">
+            <div class="input-column">
+                <input type="text" name="username" placeholder="Имя пользователя" required>
+                <input type="password" name="password" placeholder="Пароль" required>
+            </div>
+
+            <div th:if="${isAuthenticationFailed}" class="error-message">
+                <span>Неверное имя пользователя или пароль</span>
+            </div>
+
+            <button type="submit" id="submit-btn" class="sign-in-btn">Войти</button>
+
+            <div class="auth-link">
+                Еще не с нами?
+                <a th:href="@{/auth/register}">Начать свою travel-историю</a>
+            </div>
+        </form>
+    </section>
+
+    <div class="right-panel"></div>
+
+</main>
+
+<script>
+    function disableSubmitButton(form) {
+        const btn = form.querySelector('#submit-btn');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerText = 'Вход...';
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    background: #1a1512;
+    overflow-x: hidden;
+}
+
+.container {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.site-title {
+    position: absolute;
+    top: 30px;
+    left: 50px;
+    z-index: 10;
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.fullscreen-panel {
+    flex: 1;
+    position: relative;
+    background: url('../images/friends_group.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(40, 25, 20, 0.4), rgba(26, 21, 18, 0.85));
+    z-index: 1;
+}
+
+.center-content {
+    position: relative;
+    z-index: 2;
+    max-width: 750px;
+    text-align: center;
+    color: #ffffff;
+    padding: 40px;
+}
+
+.site-description h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 24px;
+    line-height: 1.2;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.site-description p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #f5ece1;
+    margin-bottom: 40px;
+    font-weight: 400;
+    opacity: 0.95;
+}
+
+.start-btn {
+    background: linear-gradient(90deg, #ff7a45 0%, #ff9c6e 100%);
+    color: #fff;
+    border: none;
+    padding: 20px 40px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 10px 25px rgba(255, 122, 69, 0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+}
+
+.start-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(255, 122, 69, 0.6);
+    background: linear-gradient(90deg, #e05e2b 0%, #ff7a45 100%);
+}
+
+.start-btn:active {
+    transform: translateY(-1px);
+}

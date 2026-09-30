@@ -1,0 +1,80 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: travel_fellows_db
+    restart: always
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "${EXTERNAL_DB_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  liquibase:
+    image: liquibase/liquibase:4.33
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - LIQUIBASE_COMMAND_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      - LIQUIBASE_COMMAND_USERNAME=${POSTGRES_USER}
+      - LIQUIBASE_COMMAND_PASSWORD=${POSTGRES_PASSWORD}
+      - LIQUIBASE_COMMAND_CHANGELOG_FILE=master.xml
+    command:
+      - --search-path=/liquibase/changelog
+      - update
+    volumes:
+      - ./src/main/resources/migrations:/liquibase/changelog:ro
+
+  redis:
+    image: redis:7-alpine
+    container_name: travel_fellows_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: redis-server --appendonly yes
+
+  app:
+    build: .
+    container_name: travel_fellows_app
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+    volumes:
+      - uploads_data:/app/uploads
+
+volumes:
+  postgres_data:
+  uploads_data:
+  redis_data:
+

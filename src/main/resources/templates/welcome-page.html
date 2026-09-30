@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добро пожаловать | TravelFellows</title>
+    <link th:href="@{/css/welcome-page.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+    <header class="site-title">TravelFellows</header>
+
+    <main class="fullscreen-panel">
+        <div class="overlay"></div>
+        <div class="center-content">
+            <section class="site-description">
+                <h1>Найди своих попутчиков</h1>
+                <p>Сервис для тех, кто верит, что путешествовать вместе — значит делиться впечатлениями, экономить бюджет и находить друзей по всему миру.</p>
+            </section>
+
+            <form th:action="@{/feed}" method="get">
+                <button type="submit" class="start-btn">начать путешествие с нами</button>
+            </form>
+        </div>
+    </main>
+
+</div>
+</body>
+</html>
