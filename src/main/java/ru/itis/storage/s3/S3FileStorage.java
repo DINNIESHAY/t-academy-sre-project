@@ -21,6 +21,7 @@ import java.util.Optional;
 public class S3FileStorage implements FileStorage {
 
     private static final int NOT_FOUND = 404;
+    private static final int CONFLICT = 409;
 
     private final S3Client s3Client;
     private final String bucket;
@@ -38,8 +39,19 @@ public class S3FileStorage implements FileStorage {
             if (e.statusCode() != NOT_FOUND) {
                 throw e;
             }
+            createBucket();
+        }
+    }
+
+    private void createBucket() {
+        try {
             s3Client.createBucket(request -> request.bucket(bucket));
             log.info("Создан бакет {}", bucket);
+        } catch (S3Exception e) {
+            if (e.statusCode() != CONFLICT) {
+                throw e;
+            }
+            log.info("Бакет {} уже создан другим экземпляром приложения", bucket);
         }
     }
 
