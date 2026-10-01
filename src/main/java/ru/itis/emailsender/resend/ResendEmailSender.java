@@ -8,17 +8,23 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 
 @Service
 @Slf4j
 public class ResendEmailSender implements EmailSender {
+
+    private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
 
     private final ResendProperties apiProperties;
     private final HttpClient httpClient;
 
     public ResendEmailSender(ResendProperties apiProperties) {
         this.apiProperties = apiProperties;
-        this.httpClient = HttpClient.newHttpClient();
+        this.httpClient = HttpClient.newBuilder()
+                .connectTimeout(CONNECT_TIMEOUT)
+                .build();
     }
 
     @Override
@@ -35,6 +41,7 @@ public class ResendEmailSender implements EmailSender {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(apiProperties.getApiUrl()))
+                    .timeout(REQUEST_TIMEOUT)
                     .header("Authorization", "Bearer " + apiProperties.getApiKey())
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
@@ -46,8 +53,11 @@ public class ResendEmailSender implements EmailSender {
             } else {
                 log.warn("Ошибка API. Код: {}", response.statusCode());
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.warn("Отправка письма прервана");
         } catch (Exception e) {
-            log.warn("Ошибка отправки запроса: {}", e.getMessage());
+            log.warn("Ошибка отправки запроса", e);
         }
     }
 }
