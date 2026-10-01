@@ -29,7 +29,7 @@
     <properties>
         <java.version>25</java.version>
         <springdoc.version>3.0.3</springdoc.version>
-        <jsoup.version>1.22.2</jsoup.version>
+        <jsoup.version>1.23.2</jsoup.version>
         <aws-sdk.version>2.55.6</aws-sdk.version>
     </properties>
     <dependencyManagement>
