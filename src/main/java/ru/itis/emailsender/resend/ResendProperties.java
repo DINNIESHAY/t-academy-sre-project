@@ -1,4 +1,4 @@
-package ru.itis.api.properties;
+package ru.itis.emailsender.resend;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
 @Configuration
 @ConfigurationProperties(prefix = "app.resend")
 @Validated
-public class ResendApiProperties {
+public class ResendProperties {
 
     @NotEmpty
     private String apiKey;

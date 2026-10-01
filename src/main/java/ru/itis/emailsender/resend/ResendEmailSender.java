@@ -1,8 +1,8 @@
-package ru.itis.api;
+package ru.itis.emailsender.resend;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.itis.api.properties.ResendApiProperties;
+import ru.itis.emailsender.EmailSender;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -11,16 +11,17 @@ import java.net.http.HttpResponse;
 
 @Service
 @Slf4j
-public class EmailService {
+public class ResendEmailSender implements EmailSender {
 
-    private final ResendApiProperties apiProperties;
+    private final ResendProperties apiProperties;
     private final HttpClient httpClient;
 
-    public EmailService(ResendApiProperties apiProperties) {
+    public ResendEmailSender(ResendProperties apiProperties) {
         this.apiProperties = apiProperties;
         this.httpClient = HttpClient.newHttpClient();
     }
 
+    @Override
     public void sendVerificationCode(String targetEmail, String code) {
         String jsonBody = String.format("""
             {

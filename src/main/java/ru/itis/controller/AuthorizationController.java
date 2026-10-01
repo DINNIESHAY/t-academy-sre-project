@@ -18,7 +18,7 @@ import ru.itis.dto.form.RegistrationForm;
 import ru.itis.entity.User;
 import ru.itis.model.UserRole;
 import ru.itis.service.UserService;
-import ru.itis.util.VerificationService;
+import ru.itis.service.VerificationService;
 
 import java.util.Collections;
 import java.util.Set;

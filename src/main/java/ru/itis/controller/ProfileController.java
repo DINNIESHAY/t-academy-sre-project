@@ -2,7 +2,6 @@ package ru.itis.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,10 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.itis.dto.form.ProfileForm;
+import ru.itis.service.AvatarService;
 import ru.itis.service.ProfileService;
-import ru.itis.util.FileStorageService;
 
 import java.security.Principal;
 
@@ -22,12 +20,12 @@ import java.security.Principal;
 public class ProfileController {
 
     private final ProfileService profileService;
-    private final FileStorageService fileStorageService;
+    private final AvatarService avatarService;
 
     @Autowired
-    public ProfileController(ProfileService profileService,  FileStorageService fileStorageService) {
+    public ProfileController(ProfileService profileService, AvatarService avatarService) {
         this.profileService = profileService;
-        this.fileStorageService = fileStorageService;
+        this.avatarService = avatarService;
     }
 
     @GetMapping("/setup")
@@ -46,7 +44,7 @@ public class ProfileController {
         }
 
         try {
-            String avatarUrl = fileStorageService.saveAvatar(profileForm.getAvatarFile());
+            String avatarUrl = avatarService.saveAvatar(profileForm.getAvatarFile());
             profileForm.setAvatarUrl(avatarUrl);
         } catch (Exception e) {
             model.addAttribute("avatarError", e.getMessage());
