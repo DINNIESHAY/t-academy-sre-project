@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.dto.PendingRegistration;
 import ru.itis.dto.form.RegistrationForm;
 import ru.itis.entity.User;
 import ru.itis.model.UserRole;
@@ -76,7 +77,13 @@ public class AuthorizationController {
 
         String verificationCode = verificationService.sendVerificationCode(form.getEmail());
 
-        session.setAttribute("pendingRegistrationForm", form);
+        PendingRegistration pendingRegistration = new PendingRegistration(
+                form.getUsername(),
+                form.getEmail(),
+                passwordEncoder.encode(form.getPassword())
+        );
+
+        session.setAttribute("pendingRegistration", pendingRegistration);
         session.setAttribute("emailVerificationCode", verificationCode);
 
         return "redirect:/auth/verify-code";
@@ -96,17 +103,25 @@ public class AuthorizationController {
                              Model model) {
 
         String sessionCode = (String) session.getAttribute("emailVerificationCode");
-        RegistrationForm form = (RegistrationForm) session.getAttribute("pendingRegistrationForm");
+        PendingRegistration pendingRegistration = (PendingRegistration) session.getAttribute("pendingRegistration");
 
-        if (sessionCode != null && sessionCode.equals(userCode)) {
-            String encodedPassword = passwordEncoder.encode(form.getPassword());
-            User user = new User(form.getUsername(), form.getEmail(), encodedPassword, UserRole.USER);
+        if (sessionCode == null || pendingRegistration == null) {
+            return "redirect:/auth/register";
+        }
+
+        if (sessionCode.equals(userCode)) {
+            User user = new User(
+                    pendingRegistration.username(),
+                    pendingRegistration.email(),
+                    pendingRegistration.encodedPassword(),
+                    UserRole.USER
+            );
 
             userService.save(user);
-            forceAutoLogin(form.getUsername(), encodedPassword, session);
+            forceAutoLogin(pendingRegistration.username(), pendingRegistration.encodedPassword(), session);
 
             session.removeAttribute("emailVerificationCode");
-            session.removeAttribute("pendingRegistrationForm");
+            session.removeAttribute("pendingRegistration");
 
             return "redirect:/profile/setup";
         }
