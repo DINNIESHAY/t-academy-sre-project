@@ -35,7 +35,7 @@ services:
       - ./src/main/resources/migrations:/liquibase/changelog:ro
 
   redis:
-    image: redis:7.4.11-alpine
+    image: redis:8.10.2-alpine
     restart: always
     ports:
       - "${EXTERNAL_REDIS_PORT:-6379}:6379"
