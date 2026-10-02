@@ -4,3 +4,6 @@ services:
 
   migrate:
     build: .
+
+  proxy:
+    build: ./nginx
