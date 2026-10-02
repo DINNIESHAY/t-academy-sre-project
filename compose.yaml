@@ -1,8 +1,15 @@
 name: travel-fellows
 
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   postgres:
     image: postgres:16.15
+    logging: *default-logging
     restart: always
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
@@ -20,6 +27,7 @@ services:
 
   liquibase:
     image: liquibase/liquibase:4.33.0
+    logging: *default-logging
     depends_on:
       postgres:
         condition: service_healthy
@@ -36,6 +44,7 @@ services:
 
   redis:
     image: redis:7.4.11-alpine
+    logging: *default-logging
     restart: always
     ports:
       - "127.0.0.1:${EXTERNAL_REDIS_PORT:-6379}:6379"
@@ -50,6 +59,7 @@ services:
 
   seaweedfs:
     image: chrislusf/seaweedfs:4.47
+    logging: *default-logging
     restart: always
     command: mini
     environment:
@@ -67,6 +77,7 @@ services:
 
   app:
     image: ${APP_IMAGE:-ghcr.io/dinnieshay/t-academy-sre-project}:${APP_VERSION:-dev}
+    logging: *default-logging
     restart: always
     deploy:
       replicas: ${APP_REPLICAS:-1}
@@ -97,6 +108,7 @@ services:
 
   proxy:
     image: nginx:1.30.5-alpine
+    logging: *default-logging
     restart: always
     ports:
       - "${APP_PORT:-8080}:80"
@@ -106,8 +118,44 @@ services:
       app:
         condition: service_healthy
 
+  loki:
+    image: grafana/loki:3.7.8
+    logging: *default-logging
+    profiles: [ logging ]
+    restart: always
+    volumes:
+      - loki_data:/loki
+
+  alloy:
+    image: grafana/alloy:v1.20.1
+    logging: *default-logging
+    profiles: [ logging ]
+    restart: always
+    volumes:
+      - ./logging/alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:13.2.3
+    logging: *default-logging
+    profiles: [ logging ]
+    restart: always
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+    ports:
+      - "127.0.0.1:${EXTERNAL_GRAFANA_PORT:-3000}:3000"
+    volumes:
+      - ./logging/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - loki
+
 volumes:
   postgres_data:
   seaweedfs_data:
   redis_data:
-
+  loki_data:
+  grafana_data:
