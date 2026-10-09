@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: travel-fellows
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: travel-fellows
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: travel-fellows
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+      - name: app
+        image: travel-fellows-app:1.0.0
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: app-secrets
+        startupProbe:
+          httpGet:
+            path: /travel-fellows/actuator/health/liveness
+            port: 8080
+          periodSeconds: 5
+          failureThreshold: 30
+        readinessProbe:
+          httpGet:
+            path: /travel-fellows/actuator/health/readiness
+            port: 8080
+          periodSeconds: 10
+          failureThreshold: 3
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            path: /travel-fellows/actuator/health/liveness
+            port: 8080
+          periodSeconds: 10
+          failureThreshold: 3
+          timeoutSeconds: 2
+        resources:
+          requests:
+            cpu: 250m
+            memory: 384Mi
+          limits:
+            memory: 768Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+  namespace: travel-fellows
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8080
+    nodePort: 30080
+  selector:
+    app: travel-fellows
+...

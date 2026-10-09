@@ -40,3 +40,6 @@ build/
 ### Runtime data ###
 uploads/
 *.log
+
+### Kubernetes secrets ###
+k8s/secret.env
