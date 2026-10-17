@@ -4,13 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.ui.Model;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.server.ResponseStatusException;
 import ru.itis.exception.exceptions.TripNotFoundException;
 
 import java.util.HashMap;
@@ -31,7 +29,7 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        log.warn("Validation failed: {}", errors);
+        log.atWarn().addKeyValue("validation.fields", errors.keySet()).log("Request validation failed");
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 "Введены некорректные данные",
@@ -44,7 +42,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({UsernameNotFoundException.class, TripNotFoundException.class})
     @ResponseBody
     public ResponseEntity<ExceptionResponse> handleResponseStatusException(Exception ex) {
-        log.warn("{}: {}", ex.getClass().getSimpleName(), ex.getMessage());
+        log.atWarn().addKeyValue("error.type", ex.getClass().getSimpleName()).log("Requested resource not found");
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 ex.getMessage(),

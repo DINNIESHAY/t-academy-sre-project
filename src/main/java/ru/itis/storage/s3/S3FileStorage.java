@@ -46,12 +46,12 @@ public class S3FileStorage implements FileStorage {
     private void createBucket() {
         try {
             s3Client.createBucket(request -> request.bucket(bucket));
-            log.info("Создан бакет {}", bucket);
+            log.atInfo().addKeyValue("s3.bucket", bucket).log("S3 bucket created");
         } catch (S3Exception e) {
             if (e.statusCode() != CONFLICT) {
                 throw e;
             }
-            log.info("Бакет {} уже создан другим экземпляром приложения", bucket);
+            log.atDebug().addKeyValue("s3.bucket", bucket).log("S3 bucket already created by another instance");
         }
     }
 

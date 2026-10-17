@@ -53,7 +53,7 @@ public class AvatarService {
         try (InputStream content = file.getInputStream()) {
             fileStorage.save(AVATARS_KEY_PREFIX + fileName, content, file.getSize(), contentType);
         } catch (IOException | FileStorageException e) {
-            log.warn("Не удалось сохранить аватар", e);
+            log.error("Failed to save avatar", e);
             throw new AvatarNotSavedException("Ошибка при сохранении аватара");
         }
 

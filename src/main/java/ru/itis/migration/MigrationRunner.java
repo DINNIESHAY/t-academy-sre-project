@@ -23,7 +23,7 @@ public class MigrationRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        log.info("Миграции базы данных применены: {}", liquibase.getChangeLog());
+        log.atInfo().addKeyValue("liquibase.changelog", liquibase.getChangeLog()).log("Database migrations applied");
         System.exit(SpringApplication.exit(context));
     }
 }

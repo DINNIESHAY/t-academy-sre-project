@@ -36,24 +36,22 @@ public class TripApplicationRestController {
             tripApplicationService.createApplication(tripId, principal.getName(), request);
             return ResponseEntity.ok().body(Map.of("message", "Заявка успешно отправлена!"));
         } catch (IllegalArgumentException | IllegalStateException e) {
-            log.warn("Failed to create application for trip {} by user {}: {}", tripId, principal.getName(), e.getMessage());
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         } catch (Exception e) {
-            log.error("Unexpected error creating application for trip {} by user {}", tripId, principal.getName(), e);
+            log.atError().setCause(e).addKeyValue("trip_id", tripId).log("Failed to create trip application");
             return ResponseEntity.internalServerError().body(Map.of("message", "Ошибка при отправке заявки"));
         }
     }
 
     @PostMapping("/{id}/accept")
-    public ResponseEntity<?> acceptApplication(@PathVariable("id") Long applicationId, Principal principal) {
+    public ResponseEntity<?> acceptApplication(@PathVariable("id") Long applicationId) {
         try {
             tripApplicationService.acceptApplication(applicationId);
             return ResponseEntity.ok().body(Map.of("message", "Заявка принята"));
         } catch (IllegalArgumentException | IllegalStateException e) {
-            log.warn("Failed to accept application {} by user {}: {}", applicationId, principal.getName(), e.getMessage());
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         } catch (Exception e) {
-            log.error("Unexpected error accepting application {} by user {}", applicationId, principal.getName(), e);
+            log.atError().setCause(e).addKeyValue("application_id", applicationId).log("Failed to accept trip application");
             return ResponseEntity.internalServerError().body(Map.of("message", "Ошибка при принятии заявки"));
         }
     }

@@ -49,15 +49,15 @@ public class ResendEmailSender implements EmailSender {
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 200 || response.statusCode() == 201) {
-                log.debug("Письмо успешно отправлено на почту: {}", targetEmail);
+                log.debug("Verification email sent");
             } else {
-                log.warn("Ошибка API. Код: {}", response.statusCode());
+                log.atWarn().addKeyValue("http.response.status_code", response.statusCode()).log("Email provider rejected request");
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            log.warn("Отправка письма прервана");
+            log.warn("Email sending interrupted");
         } catch (Exception e) {
-            log.warn("Ошибка отправки запроса", e);
+            log.warn("Failed to send email", e);
         }
     }
 }
