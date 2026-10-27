@@ -26,6 +26,7 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 8080
+        - containerPort: 8081
         envFrom:
         - configMapRef:
             name: app-config
@@ -33,21 +34,21 @@ spec:
             name: app-secrets
         startupProbe:
           httpGet:
-            path: /travel-fellows/actuator/health/liveness
-            port: 8080
+            path: /actuator/health/liveness
+            port: 8081
           periodSeconds: 5
           failureThreshold: 30
         readinessProbe:
           httpGet:
-            path: /travel-fellows/actuator/health/readiness
-            port: 8080
+            path: /actuator/health/readiness
+            port: 8081
           periodSeconds: 10
           failureThreshold: 3
           timeoutSeconds: 2
         livenessProbe:
           httpGet:
-            path: /travel-fellows/actuator/health/liveness
-            port: 8080
+            path: /actuator/health/liveness
+            port: 8081
           periodSeconds: 10
           failureThreshold: 3
           timeoutSeconds: 2

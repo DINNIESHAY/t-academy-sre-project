@@ -22,7 +22,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/", "/css/**", "/js/**", "/images/**",
                                 "/auth/register", "/auth/verify-code","/error",
-                                "/actuator/health/**"
+                                "/actuator/health/**", "/actuator/prometheus"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
