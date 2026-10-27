@@ -14,6 +14,7 @@ import ru.itis.entity.Trip;
 import ru.itis.entity.User;
 import ru.itis.exception.exceptions.TripNotFoundException;
 import ru.itis.exception.exceptions.UserNotFoundException;
+import ru.itis.metrics.BusinessMetrics;
 import ru.itis.repository.FavoriteRepository;
 import ru.itis.repository.TripRepository;
 import ru.itis.repository.UserRepository;
@@ -27,12 +28,14 @@ public class TripService {
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
     private final FavoriteRepository favoriteRepository;
+    private final BusinessMetrics metrics;
 
     @Autowired
-    public TripService(TripRepository tripRepository, UserRepository userRepository, FavoriteRepository favoriteRepository) {
+    public TripService(TripRepository tripRepository, UserRepository userRepository, FavoriteRepository favoriteRepository, BusinessMetrics metrics) {
         this.tripRepository = tripRepository;
         this.userRepository = userRepository;
         this.favoriteRepository = favoriteRepository;
+        this.metrics = metrics;
     }
 
     @Cacheable(value = "tripPages", key = "'page:' + #pageable.pageNumber + ':size:' + #pageable.pageSize + ':user:' + #username")
@@ -91,7 +94,9 @@ public class TripService {
                 .owner(owner)
                 .build();
 
-        return TripDto.fromEntity(tripRepository.save(trip));
+        TripDto saved = TripDto.fromEntity(tripRepository.save(trip));
+        metrics.tripPublished();
+        return saved;
     }
 
     @Caching(evict = {

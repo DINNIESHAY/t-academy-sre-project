@@ -3,6 +3,7 @@ package ru.itis.emailsender.resend;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.itis.emailsender.EmailSender;
+import ru.itis.metrics.BusinessMetrics;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -19,9 +20,11 @@ public class ResendEmailSender implements EmailSender {
 
     private final ResendProperties apiProperties;
     private final HttpClient httpClient;
+    private final BusinessMetrics metrics;
 
-    public ResendEmailSender(ResendProperties apiProperties) {
+    public ResendEmailSender(ResendProperties apiProperties, BusinessMetrics metrics) {
         this.apiProperties = apiProperties;
+        this.metrics = metrics;
         this.httpClient = HttpClient.newBuilder()
                 .connectTimeout(CONNECT_TIMEOUT)
                 .build();
@@ -38,6 +41,8 @@ public class ResendEmailSender implements EmailSender {
             }
             """, apiProperties.getFrom(), targetEmail, code);
 
+        long start = System.nanoTime();
+        boolean sent = false;
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(apiProperties.getApiUrl()))
@@ -49,6 +54,7 @@ public class ResendEmailSender implements EmailSender {
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 200 || response.statusCode() == 201) {
+                sent = true;
                 log.debug("Verification email sent");
             } else {
                 log.atWarn().addKeyValue("http.response.status_code", response.statusCode()).log("Email provider rejected request");
@@ -58,6 +64,8 @@ public class ResendEmailSender implements EmailSender {
             log.warn("Email sending interrupted");
         } catch (Exception e) {
             log.warn("Failed to send email", e);
+        } finally {
+            metrics.verificationEmailSent(sent, Duration.ofNanos(System.nanoTime() - start));
         }
     }
 }

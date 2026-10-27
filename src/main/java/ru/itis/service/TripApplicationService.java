@@ -16,6 +16,7 @@ import ru.itis.entity.TripMember;
 import ru.itis.entity.User;
 import ru.itis.exception.exceptions.TripNotFoundException;
 import ru.itis.exception.exceptions.UserNotFoundException;
+import ru.itis.metrics.BusinessMetrics;
 import ru.itis.repository.TripApplicationRepository;
 import ru.itis.repository.TripMemberRepository;
 import ru.itis.repository.TripRepository;
@@ -30,16 +31,19 @@ public class TripApplicationService {
     private final TripMemberRepository tripMemberRepository;
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
+    private final BusinessMetrics metrics;
 
     @Autowired
     public TripApplicationService(TripApplicationRepository tripApplicationRepository,
                                   TripMemberRepository tripMemberRepository,
                                   TripRepository tripRepository,
-                                  UserRepository userRepository) {
+                                  UserRepository userRepository,
+                                  BusinessMetrics metrics) {
         this.tripApplicationRepository = tripApplicationRepository;
         this.tripMemberRepository = tripMemberRepository;
         this.tripRepository = tripRepository;
         this.userRepository = userRepository;
+        this.metrics = metrics;
     }
 
     @Transactional
@@ -68,6 +72,7 @@ public class TripApplicationService {
         }
 
         tripApplicationRepository.save(new TripApplication(applicant, trip, request.getMessage(), request.getContacts()));
+        metrics.applicationSubmitted();
     }
 
     @Transactional
@@ -82,6 +87,7 @@ public class TripApplicationService {
 
         tripMemberRepository.save(new TripMember(application.getTrip(), application.getApplicant()));
         tripApplicationRepository.delete(application);
+        metrics.applicationAccepted();
     }
 
     public ApplicationCardsContainerDto findApplicationsToMyTrips(String username, Pageable pageable) {

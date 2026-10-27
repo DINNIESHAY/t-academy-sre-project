@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.itis.dto.PendingRegistration;
 import ru.itis.dto.form.RegistrationForm;
 import ru.itis.entity.User;
+import ru.itis.metrics.BusinessMetrics;
 import ru.itis.model.UserRole;
 import ru.itis.service.UserService;
 import ru.itis.service.VerificationService;
@@ -31,14 +32,17 @@ public class AuthorizationController {
     private final UserService userService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final VerificationService verificationService;
+    private final BusinessMetrics metrics;
 
     @Autowired
     public AuthorizationController(UserService userService,
                                    BCryptPasswordEncoder bCryptPasswordEncoder,
-                                   VerificationService verificationService) {
+                                   VerificationService verificationService,
+                                   BusinessMetrics metrics) {
         this.userService = userService;
         this.passwordEncoder = bCryptPasswordEncoder;
         this.verificationService = verificationService;
+        this.metrics = metrics;
     }
 
     @GetMapping("/login")
@@ -85,6 +89,7 @@ public class AuthorizationController {
 
         session.setAttribute("pendingRegistration", pendingRegistration);
         session.setAttribute("emailVerificationCode", verificationCode);
+        metrics.registrationStarted();
 
         return "redirect:/auth/verify-code";
     }
@@ -118,6 +123,7 @@ public class AuthorizationController {
             );
 
             userService.save(user);
+            metrics.registrationCompleted();
             forceAutoLogin(pendingRegistration.username(), pendingRegistration.encodedPassword(), session);
 
             session.removeAttribute("emailVerificationCode");
