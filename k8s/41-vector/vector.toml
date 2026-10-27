@@ -1,0 +1,33 @@
+data_dir = "/var/lib/vector"
+
+[sources.app_logs]
+type = "kubernetes_logs"
+extra_label_selector = "app=travel-fellows"
+
+[transforms.parse_json]
+type = "remap"
+inputs = ["app_logs"]
+source = '''
+parsed, err = parse_json(.message)
+if err == null && is_object(parsed) {
+  . = object!(parsed)
+}
+'''
+
+[sinks.victoria_logs]
+type = "elasticsearch"
+inputs = ["parse_json"]
+endpoints = ["http://victoria-logs:9428/insert/elasticsearch/"]
+api_version = "v8"
+compression = "gzip"
+
+[sinks.victoria_logs.bulk]
+index = "travel-fellows"
+
+[sinks.victoria_logs.healthcheck]
+enabled = false
+
+[sinks.victoria_logs.query]
+_msg_field = "message"
+_time_field = "@timestamp"
+_stream_fields = "service.name,service.node.name"
