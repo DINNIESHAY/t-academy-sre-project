@@ -1,0 +1,11 @@
+server:
+  scrape:
+    enabled: true
+  persistentVolume:
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
