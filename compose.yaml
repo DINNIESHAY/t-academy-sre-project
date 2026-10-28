@@ -8,7 +8,7 @@ x-logging: &default-logging
 
 services:
   postgres:
-    image: postgres:16.15
+    image: postgres:17.10
     logging: *default-logging
     restart: always
     environment:
