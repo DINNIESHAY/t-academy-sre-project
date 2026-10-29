@@ -120,7 +120,7 @@ services:
       - loki_data:/loki
 
   alloy:
-    image: grafana/alloy:v1.20.1
+    image: grafana/alloy:v1.21.2
     logging: *default-logging
     profiles: [ logging ]
     restart: always
