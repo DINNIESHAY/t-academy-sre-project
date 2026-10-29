@@ -112,7 +112,7 @@ services:
         condition: service_healthy
 
   loki:
-    image: grafana/loki:3.7.8
+    image: grafana/loki:3.7.9
     logging: *default-logging
     profiles: [ logging ]
     restart: always
