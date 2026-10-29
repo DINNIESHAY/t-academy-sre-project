@@ -53,7 +53,7 @@ services:
     command: redis-server --appendonly yes
 
   seaweedfs:
-    image: chrislusf/seaweedfs:4.47
+    image: chrislusf/seaweedfs:4.50
     logging: *default-logging
     restart: always
     command: mini
