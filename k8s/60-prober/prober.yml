@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prober
+  labels:
+    app: prober
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prober
+  template:
+    metadata:
+      labels:
+        app: prober
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9100"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: prober
+          image: python:3.13-alpine
+          command: ["python", "-u", "/app/prober.py"]
+          env:
+            - name: TARGET_URL
+              value: http://app/travel-fellows/
+            - name: PROBE_INTERVAL_SECONDS
+              value: "5"
+            - name: PROBE_TIMEOUT_SECONDS
+              value: "3"
+            - name: PROBE_SLOW_SECONDS
+              value: "1"
+          ports:
+            - name: metrics
+              containerPort: 9100
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
+          volumeMounts:
+            - name: script
+              mountPath: /app
+      volumes:
+        - name: script
+          configMap:
+            name: prober-script
