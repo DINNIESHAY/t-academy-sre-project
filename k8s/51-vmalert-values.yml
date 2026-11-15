@@ -1,0 +1,51 @@
+server:
+  datasource:
+    url: http://vmsingle-victoria-metrics-single-server:8428
+  configMap: vmalert-rules
+  resources:
+    requests:
+      cpu: 20m
+      memory: 32Mi
+    limits:
+      memory: 128Mi
+
+alertmanager:
+  enabled: true
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 64Mi
+  extraVolumes:
+    - name: telegram-token
+      secret:
+        secretName: alertmanager-telegram
+  extraVolumeMounts:
+    - name: telegram-token
+      mountPath: /etc/alertmanager/telegram
+      readOnly: true
+  config:
+    global:
+      resolve_timeout: 5m
+    route:
+      receiver: telegram
+      group_by: ["alertname"]
+      group_wait: 10s
+      group_interval: 1m
+      repeat_interval: 1h
+    receivers:
+      - name: telegram
+        telegram_configs:
+          - bot_token_file: /etc/alertmanager/telegram/token
+            chat_id: 780274099
+            send_resolved: true
+            parse_mode: HTML
+            message: |-
+              {{ range .Alerts -}}
+              {{ if eq .Status "firing" }}🔥 <b>{{ .Labels.alertname }}</b> [{{ .Labels.severity }}]
+              {{ .Annotations.summary }}
+              {{ .Annotations.description }}
+              {{ else }}✅ <b>{{ .Labels.alertname }}</b>: проблема устранена
+              {{ end }}
+              {{ end }}

@@ -1,0 +1,48 @@
+groups:
+  - name: travel-fellows-service
+    interval: 30s
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(http_server_requests_seconds_count{uri!~"/actuator.*",status=~"5.."}[2m]))
+          / sum(rate(http_server_requests_seconds_count{uri!~"/actuator.*"}[2m])) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Доля ответов 5xx выше 5%"
+          description: "Доля ответов с ошибкой сервера: {{ $value | humanizePercentage }}, порог 5%."
+
+      - alert: SlowResponses
+        expr: |
+          sum(rate(http_server_requests_seconds_bucket{uri!~"/actuator.*",le="0.536870911"}[2m]))
+          / sum(rate(http_server_requests_seconds_count{uri!~"/actuator.*"}[2m])) < 0.95
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Менее 95% запросов отвечают быстрее 0,54 с"
+          description: "Доля быстрых запросов: {{ $value | humanizePercentage }}, порог 95%."
+
+      - alert: AppDown
+        expr: (sum(up{job="kubernetes-pods",pod=~"app-.*"}) or vector(0)) < 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Ни один под приложения не отвечает на сбор метрик"
+          description: "Работающих экземпляров приложения: {{ $value }}."
+
+  - name: travel-fellows-runtime
+    interval: 30s
+    rules:
+      - alert: DbPoolAlmostExhausted
+        expr: |
+          hikaricp_connections_active{job="kubernetes-pods"}
+          / hikaricp_connections_max{job="kubernetes-pods"} > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Пул соединений с БД занят более чем на 80%"
+          description: "Под {{ $labels.pod }}: занято {{ $value | humanizePercentage }} соединений, порог 80%."
